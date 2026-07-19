@@ -1,0 +1,27 @@
+{
+  "name": "stack-cli",
+  "version": "0.1.0",
+  "description": "AI Stack Backup Kit CLI",
+  "private": true,
+  "type": "commonjs",
+  "bin": {
+    "stack": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "inspect": "node index.js inspect",
+    "backup": "node index.js backup",
+    "restore": "node index.js restore",
+    "doctor": "node index.js doctor"
+  },
+  "keywords": [
+    "backup",
+    "recovery",
+    "railway",
+    "hermes",
+    "9router",
+    "cli"
+  ],
+  "author": "Jio Mazidi",
+  "license": "MIT"
+}
