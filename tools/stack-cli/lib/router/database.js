@@ -1,32 +1,47 @@
-const { exists, join } = require("./utils");
+const path = require("path");
 
-function detectInstallation(root) {
+const { openDatabase } = require("../common/sqlite");
 
-    const result = {
-        root,
-        found: false,
-        database: false,
-        jwtSecret: false,
-        machineId: false
-    };
+async function openRouterDatabase(rootPath) {
 
-    if (!exists(root))
-        return result;
+    const databasePath = path.join(
+        rootPath,
+        "db",
+        "data.sqlite"
+    );
 
-    result.found = true;
+    return await openDatabase(databasePath);
 
-    result.database =
-        exists(join(root, "db", "data.sqlite"));
+}
 
-    result.jwtSecret =
-        exists(join(root, "jwt-secret"));
+function getTableNames(db) {
 
-    result.machineId =
-        exists(join(root, "machine-id"));
+    const result = db.exec(
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
+    );
 
-    return result;
+    if (!result.length)
+        return [];
+
+    return result[0].values.map(row => row[0]);
+
+}
+
+function getRowCount(db, tableName) {
+
+    const result = db.exec(
+        `SELECT COUNT(*) FROM ${tableName};`
+    );
+
+    if (!result.length)
+        return 0;
+
+    return result[0].values[0][0];
+
 }
 
 module.exports = {
-    detectInstallation
+    openRouterDatabase,
+    getTableNames,
+    getRowCount
 };

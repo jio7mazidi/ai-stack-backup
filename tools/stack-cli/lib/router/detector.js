@@ -1,4 +1,4 @@
-const { exists, join } = require("./utils");
+const { exists, join } = require("../common/utils");
 
 function detectInstallation(root) {
 
