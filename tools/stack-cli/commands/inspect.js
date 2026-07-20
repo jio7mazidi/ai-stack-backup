@@ -4,7 +4,8 @@ const {
     openRouterDatabase,
     getTableNames,
     getRowCount,
-    getProviders
+    getProviders,
+    getProviderDetails
 } = require("../lib/router/database");
 
 async function inspect(rootPath) {
@@ -54,6 +55,27 @@ async function inspect(rootPath) {
         });
 
         console.log("");
+
+        // بخش جدید: نمایش جزئیات Providerها
+        const details = getProviderDetails(db);
+
+        console.log("Provider Details");
+        console.log("------------------------------");
+
+        details.forEach((provider) => {
+            console.log(`${provider.provider}`);
+
+            if (typeof provider.data === "object" && provider.data !== null) {
+                console.log(
+                    "Fields:",
+                    Object.keys(provider.data).join(", ")
+                );
+            } else {
+                console.log("Data is not JSON");
+            }
+
+            console.log("");
+        });
 
     } catch (err) {
 

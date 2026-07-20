@@ -1,5 +1,4 @@
 const path = require("path");
-
 const { openDatabase } = require("../common/sqlite");
 
 async function openRouterDatabase(rootPath) {
@@ -35,7 +34,6 @@ function getRowCount(db, tableName) {
 }
 
 function getProviders(db) {
-
     const result = db.exec(`
         SELECT
             provider,
@@ -57,9 +55,40 @@ function getProviders(db) {
     );
 }
 
+function getProviderDetails(db) {
+    const result = db.exec(`
+        SELECT
+            provider,
+            authType,
+            name,
+            data
+        FROM providerConnections;
+    `);
+
+    if (!result.length)
+        return [];
+
+    const columns = result[0].columns;
+
+    return result[0].values.map(row => {
+        const obj = Object.fromEntries(
+            columns.map((c, i) => [c, row[i]])
+        );
+
+        try {
+            obj.data = JSON.parse(obj.data);
+        } catch {
+            // اگر JSON نبود همان رشته را نگه می‌داریم
+        }
+
+        return obj;
+    });
+}
+
 module.exports = {
     openRouterDatabase,
     getTableNames,
     getRowCount,
-    getProviders
+    getProviders,
+    getProviderDetails
 };
