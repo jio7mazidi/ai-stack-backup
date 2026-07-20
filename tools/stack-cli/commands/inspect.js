@@ -3,7 +3,8 @@ const { detectInstallation } = require("../lib/router/detector");
 const {
     openRouterDatabase,
     getTableNames,
-    getRowCount
+    getRowCount,
+    getProviders
 } = require("../lib/router/database");
 
 async function inspect(rootPath) {
@@ -38,6 +39,20 @@ async function inspect(rootPath) {
         console.log(`Proxy Pools  : ${getRowCount(db, "proxyPools")}`);
         console.log(`API Keys     : ${getRowCount(db, "apiKeys")}`);
         console.log(`Combos       : ${getRowCount(db, "combos")}`);
+
+        console.log("");
+
+        const providers = getProviders(db);
+
+        console.log("Provider Connections");
+        console.log("------------------------------");
+
+        providers.forEach((provider, index) => {
+            console.log(
+                `${index + 1}. ${provider.provider} (${provider.authType})`
+            );
+        });
+
         console.log("");
 
     } catch (err) {
